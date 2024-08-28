@@ -33,4 +33,5 @@ public class SaleMinDTO {
 	public LocalDate getDate() {
 		return date;
 	}
+
 }

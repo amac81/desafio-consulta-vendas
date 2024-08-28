@@ -1,10 +1,5 @@
 package com.devsuperior.dsmeta.controllers;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +36,7 @@ public class SaleController {
 	
 
 	@GetMapping(value = "/report")
-	public ResponseEntity<?> getReport(
+	public ResponseEntity<Page<SaleMinDTO>> getReport(
 			@RequestParam(value = "minDate", defaultValue = "0") String minDate,
 			@RequestParam(value = "maxDate", defaultValue = "10") String maxDate,
 			@RequestParam(value = "name", defaultValue = "") String name) {
@@ -55,13 +50,14 @@ public class SaleController {
 	}
 
 	@GetMapping(value = "/summary")
-	public ResponseEntity<?> getSummary(
+	public ResponseEntity<Page<SaleMinDTO>> getSummary(
 			@RequestParam(value = "minDate", defaultValue = "") String minDateStr,
-			@RequestParam(value = "maxDate", defaultValue = "") String maxDateStr) {
+			@RequestParam(value = "maxDate", defaultValue = "") String maxDateStr, Pageable pageable) {
 
-		service.getValidPeriod(minDateStr, maxDateStr);
 		
-		// TODO
-		return null;
+		Page <SaleMinDTO> page = service.findAllBetweenDates(minDateStr, maxDateStr, pageable);
+		
+		
+		return ResponseEntity.ok(page);
 	}
 }
