@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleReportDTO;
 import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.exceptions.ParseException;
@@ -82,5 +83,34 @@ public class SaleService {
 		
 	}
 	
+	
+	@Transactional(readOnly = true)
+	public List<SaleReportDTO> findAllBetweenDatesToReport(String minDateStr, String maxDateStr, String name, boolean periodIsPresent) {
+		final LocalDate maxDate;
+		final LocalDate minDate;
+		
+		final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		
+		if(!periodIsPresent) {
+			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+			minDate = maxDate.minusMonths(12L);			
+		}else {	
+			try {
+				maxDate = maxDateStr.isBlank() ? 
+						LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : 
+						LocalDate.parse(maxDateStr, dtf);
+				
+				minDate = minDateStr.isBlank() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr, dtf); 
+				
+			}catch(DateTimeParseException e) {
+				throw new ParseException("Formato de data inválido.");
+			}
+			
+		}
+		
+		return repository.reportSearch(minDate, maxDate, name);		
+		
+	}
 	
 }

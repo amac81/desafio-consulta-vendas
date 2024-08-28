@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleReportDTO;
 import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.services.SaleService;
 
@@ -39,17 +40,14 @@ public class SaleController {
 	
 
 	@GetMapping(value = "/report")
-	public ResponseEntity<Page<SaleMinDTO>> getReport(
+	public ResponseEntity<List<SaleReportDTO>> getReport(
 			@RequestParam(value = "minDate", required = false) String minDate,
 			@RequestParam(value = "maxDate", required = false) String maxDate,
 			@RequestParam(value = "name", defaultValue = "") String name) {
 		
-		//PageRequest pageRequest = PageRequest.of(minDate, maxDate, name);
-		//Page<SaleMinDTO> list = service.find(pageRequest);
+		List <SaleReportDTO> list = service.findAllBetweenDatesToReport(minDate, maxDate, name, true);
 		
-		//return ResponseEntity.ok(list);
-		
-		return null;
+		return ResponseEntity.ok(list);
 	}
 
 	@GetMapping(value = "/summary")
