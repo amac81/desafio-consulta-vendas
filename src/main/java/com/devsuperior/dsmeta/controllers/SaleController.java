@@ -40,8 +40,8 @@ public class SaleController {
 
 	@GetMapping(value = "/report")
 	public ResponseEntity<Page<SaleMinDTO>> getReport(
-			@RequestParam(value = "minDate", defaultValue = "0") String minDate,
-			@RequestParam(value = "maxDate", defaultValue = "10") String maxDate,
+			@RequestParam(value = "minDate", required = false) String minDate,
+			@RequestParam(value = "maxDate", required = false) String maxDate,
 			@RequestParam(value = "name", defaultValue = "") String name) {
 		
 		//PageRequest pageRequest = PageRequest.of(minDate, maxDate, name);
