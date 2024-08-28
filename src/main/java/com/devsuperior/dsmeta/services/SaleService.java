@@ -54,22 +54,28 @@ public class SaleService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<SaleSummaryDTO> findAllBetweenDates(String minDateStr, String maxDateStr) {
+	public List<SaleSummaryDTO> findAllBetweenDates(String minDateStr, String maxDateStr, boolean periodIsPresent) {
 		final LocalDate maxDate;
 		final LocalDate minDate;
 		
-		
 		final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
-		try {
-			maxDate = maxDateStr.isBlank() ? 
-					LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : 
-					LocalDate.parse(maxDateStr, dtf);
+		
+		if(!periodIsPresent) {
+			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+			minDate = maxDate.minusMonths(12L);			
+		}else {	
+			try {
+				maxDate = maxDateStr.isBlank() ? 
+						LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : 
+						LocalDate.parse(maxDateStr, dtf);
+				
+				minDate = minDateStr.isBlank() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr, dtf); 
+				
+			}catch(DateTimeParseException e) {
+				throw new ParseException("Formato de data inválido.");
+			}
 			
-			minDate = minDateStr.isBlank() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr, dtf); 
-			
-		}catch(DateTimeParseException e) {
-			throw new ParseException("Formato de data inválido.");
 		}
 		
 		return repository.summarySearch(minDate, maxDate);		

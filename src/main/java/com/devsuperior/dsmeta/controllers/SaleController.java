@@ -54,13 +54,21 @@ public class SaleController {
 
 	@GetMapping(value = "/summary")
 	public ResponseEntity<List<SaleSummaryDTO>> getSummary(
-			@RequestParam(value = "minDate", defaultValue = "") String minDateStr,
-			@RequestParam(value = "maxDate", defaultValue = "") String maxDateStr, Pageable pageable) {
-
+			@RequestParam(value = "minDate", required = false) String minDateStr,
+			@RequestParam(value = "maxDate", required = false ) String maxDateStr) {
 		
-		List <SaleSummaryDTO> list = service.findAllBetweenDates(minDateStr, maxDateStr);
+		List <SaleSummaryDTO> list = null;
+		
+		if(minDateStr == null || maxDateStr == null) {
+			list = service.findAllBetweenDates("", "", false);
+		}
+		else {
+			list = service.findAllBetweenDates(minDateStr, maxDateStr, true);
+		}
 		
 		
 		return ResponseEntity.ok(list);
 	}
+	
+	
 }
