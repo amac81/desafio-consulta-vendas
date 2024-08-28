@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.exceptions.ParseException;
 import com.devsuperior.dsmeta.exceptions.ResourceNotFoundException;
@@ -52,7 +54,7 @@ public class SaleService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<SaleMinDTO> findAllBetweenDates(String minDateStr, String maxDateStr,  Pageable pageable) {
+	public List<SaleSummaryDTO> findAllBetweenDates(String minDateStr, String maxDateStr) {
 		final LocalDate maxDate;
 		final LocalDate minDate;
 		
@@ -66,13 +68,11 @@ public class SaleService {
 			
 			minDate = minDateStr.isBlank() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr, dtf); 
 			
-			System.out.println("minDate: " + minDate.toString());
-			System.out.println("maxDate: " + maxDate.toString()); 
 		}catch(DateTimeParseException e) {
 			throw new ParseException("Formato de data inválido.");
 		}
 		
-		return repository.summarySearch(minDate, maxDate, pageable);		
+		return repository.summarySearch(minDate, maxDate);		
 		
 	}
 	
