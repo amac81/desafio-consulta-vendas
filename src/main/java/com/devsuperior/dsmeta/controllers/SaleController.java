@@ -1,6 +1,8 @@
 package com.devsuperior.dsmeta.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +45,28 @@ public class SaleController {
 			@RequestParam(value = "maxDate", required = false) String maxDateStr,
 			@RequestParam(value = "name", defaultValue = "") String name) {
 		
+		Map <String, String> reportParams = new HashMap<>();
+		
+		reportParams.put("name", name);
+		reportParams.put("report", "report");
+		
+		if(!(minDateStr == null && maxDateStr == null)) 
+		{
+			reportParams.put("minDateStr", minDateStr);
+			reportParams.put("maxDateStr", maxDateStr);
+		}
+		
+		List <?> list = service.findAllBetweenDates(reportParams);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	/*@GetMapping(value = "/report")
+	public ResponseEntity<?> getReport(
+			@RequestParam(value = "minDate", required = false) String minDateStr,
+			@RequestParam(value = "maxDate", required = false) String maxDateStr,
+			@RequestParam(value = "name", defaultValue = "") String name) {
+		
 		List <?> list = null;
 		
 		if(minDateStr == null && maxDateStr == null) {
@@ -71,6 +95,6 @@ public class SaleController {
 		
 		return ResponseEntity.ok(list);
 	}
-	
+	*/
 	
 }
