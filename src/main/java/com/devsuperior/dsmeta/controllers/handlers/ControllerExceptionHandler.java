@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.devsuperior.dsmeta.dto.CustomError;
+import com.devsuperior.dsmeta.exceptions.BusinessException;
 import com.devsuperior.dsmeta.exceptions.DatabaseException;
 import com.devsuperior.dsmeta.exceptions.ParseException;
 import com.devsuperior.dsmeta.exceptions.ResourceNotFoundException;
@@ -35,6 +36,17 @@ public class ControllerExceptionHandler {
 		
 		return ResponseEntity.status(status).body(err);
 	}
+	
+	
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<CustomError> resourceNotFound(BusinessException e, HttpServletRequest request) 
+	{
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
+		
+		return ResponseEntity.status(status).body(err);
+	}
+	
 	
 	@ExceptionHandler(DatabaseException.class)
 	public ResponseEntity<CustomError> database(DatabaseException e, HttpServletRequest request) 

@@ -49,10 +49,12 @@ public class SaleController {
 		reportParams.put("name", name);
 		reportParams.put("report", "report");
 		
-		if(!(minDateStr == null && maxDateStr == null)) 
-		{
-			reportParams.put("minDateStr", minDateStr);
-			reportParams.put("maxDateStr", maxDateStr);
+		if(minDateStr != null){
+			reportParams.put("minDateStr", minDateStr);			
+		}
+		
+		if(maxDateStr != null){
+			reportParams.put("maxDateStr", maxDateStr);			
 		}
 		
 		List <?> list = service.findAllBetweenDates(reportParams);
@@ -67,10 +69,12 @@ public class SaleController {
 		
 		Map <String, String> summaryParams = new HashMap<>();
 
-		if(!(minDateStr == null || maxDateStr == null)) 
-		{
-			summaryParams.put("minDateStr", minDateStr);
-			summaryParams.put("maxDateStr", maxDateStr);
+		if(minDateStr != null){
+			summaryParams.put("minDateStr", minDateStr);			
+		}
+		
+		if(maxDateStr != null){
+			summaryParams.put("maxDateStr", maxDateStr);			
 		}
 		
 		List <?> list = service.findAllBetweenDates(summaryParams);
