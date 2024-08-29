@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
-import com.devsuperior.dsmeta.dto.SaleReportDTO;
-import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.services.SaleService;
 
 @RestController
@@ -22,7 +20,7 @@ import com.devsuperior.dsmeta.services.SaleService;
 public class SaleController {
 
 	@Autowired
-	private SaleService service;
+	private SaleService<?> service;
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<SaleMinDTO> findById(@PathVariable Long id) {
@@ -40,28 +38,34 @@ public class SaleController {
 	
 
 	@GetMapping(value = "/report")
-	public ResponseEntity<List<SaleReportDTO>> getReport(
-			@RequestParam(value = "minDate", required = false) String minDate,
-			@RequestParam(value = "maxDate", required = false) String maxDate,
+	public ResponseEntity<?> getReport(
+			@RequestParam(value = "minDate", required = false) String minDateStr,
+			@RequestParam(value = "maxDate", required = false) String maxDateStr,
 			@RequestParam(value = "name", defaultValue = "") String name) {
 		
-		List <SaleReportDTO> list = service.findAllBetweenDatesToReport(minDate, maxDate, name, true);
+		List <?> list = null;
+		
+		if(minDateStr == null && maxDateStr == null) {
+			list = service.findAllBetweenDates("", "", "", "report", false);
+		}else {
+			list = service.findAllBetweenDates(minDateStr, maxDateStr, name, "report", true);
+		}
 		
 		return ResponseEntity.ok(list);
 	}
 
 	@GetMapping(value = "/summary")
-	public ResponseEntity<List<SaleSummaryDTO>> getSummary(
+	public ResponseEntity<?> getSummary(
 			@RequestParam(value = "minDate", required = false) String minDateStr,
 			@RequestParam(value = "maxDate", required = false ) String maxDateStr) {
 		
-		List <SaleSummaryDTO> list = null;
+		List<?> list = null;
 		
-		if(minDateStr == null || maxDateStr == null) {
-			list = service.findAllBetweenDates("", "", false);
+		if(minDateStr == null && maxDateStr == null) {
+			list = service.findAllBetweenDates("", "", "", "summary", false);
 		}
 		else {
-			list = service.findAllBetweenDates(minDateStr, maxDateStr, true);
+			list = service.findAllBetweenDates(minDateStr, maxDateStr, "", "summary", true);
 		}
 		
 		
