@@ -38,7 +38,6 @@ public class SaleController {
 		return ResponseEntity.ok(page);
 	}
 	
-
 	@GetMapping(value = "/report")
 	public ResponseEntity<?> getReport(
 			@RequestParam(value = "minDate", required = false) String minDateStr,
@@ -61,40 +60,23 @@ public class SaleController {
 		return ResponseEntity.ok(list);
 	}
 	
-	/*@GetMapping(value = "/report")
-	public ResponseEntity<?> getReport(
-			@RequestParam(value = "minDate", required = false) String minDateStr,
-			@RequestParam(value = "maxDate", required = false) String maxDateStr,
-			@RequestParam(value = "name", defaultValue = "") String name) {
-		
-		List <?> list = null;
-		
-		if(minDateStr == null && maxDateStr == null) {
-			list = service.findAllBetweenDates("", "", "", "report", false);
-		}else {
-			list = service.findAllBetweenDates(minDateStr, maxDateStr, name, "report", true);
-		}
-		
-		return ResponseEntity.ok(list);
-	}
-
 	@GetMapping(value = "/summary")
 	public ResponseEntity<?> getSummary(
 			@RequestParam(value = "minDate", required = false) String minDateStr,
 			@RequestParam(value = "maxDate", required = false ) String maxDateStr) {
 		
-		List<?> list = null;
-		
-		if(minDateStr == null && maxDateStr == null) {
-			list = service.findAllBetweenDates("", "", "", "summary", false);
+		Map <String, String> summaryParams = new HashMap<>();
+
+		if(!(minDateStr == null || maxDateStr == null)) 
+		{
+			summaryParams.put("minDateStr", minDateStr);
+			summaryParams.put("maxDateStr", maxDateStr);
 		}
-		else {
-			list = service.findAllBetweenDates(minDateStr, maxDateStr, "", "summary", true);
-		}
 		
+		List <?> list = service.findAllBetweenDates(summaryParams);
 		
 		return ResponseEntity.ok(list);
 	}
-	*/
+	
 	
 }

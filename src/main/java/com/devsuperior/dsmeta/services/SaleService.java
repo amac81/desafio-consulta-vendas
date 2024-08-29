@@ -78,50 +78,16 @@ public class SaleService<T> {
 			
 		}
 		
-		for(String s : params.keySet()) {
-			System.out.println("KEY: " + s);
-		}
+		System.out.println("MINDATE: " + minDate.toString());
+		System.out.println("MAXDATE: " + maxDate.toString());
+		
 		
 		if(params.containsKey("report")) {
 			return repository.reportSearch(minDate, maxDate, params.get("name"));
 		}
 		
-		//return repository.summarySearch(minDate, maxDate);
-		return null;
+		return repository.summarySearch(minDate, maxDate);
 		
 	}
-	
-/*
- * public List<?> findAllBetweenDates(String minDateStr, String maxDateStr, String name, String type, boolean periodIsPresent) {
-		LocalDate maxDate;
-		LocalDate minDate;
 		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		
-		if(!periodIsPresent) {
-			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
-			minDate = maxDate.minusYears(1L);			
-		}else {	
-			try {	
-				maxDate = maxDateStr.isBlank() ? 
-						LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()) : 
-						LocalDate.parse(maxDateStr, dtf);
-				
-				minDate = minDateStr.isBlank() ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr, dtf); 
-				
-			}catch(DateTimeParseException e) {
-				throw new ParseException("Formato de data inválido.");
-			}
-			
-		}
-		
-		System.out.println(name);
-		
-		return type.equals("report") ? repository.reportSearch(minDate, maxDate, name) : repository.summarySearch(minDate, maxDate);		
-		
-	}
-*/		
-	
-	
 }
